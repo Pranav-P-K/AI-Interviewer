@@ -1,4 +1,5 @@
 import React from 'react'
+import Navbar from './_components/Navbar'
 
 export default function DashboardLayout({
     children,
@@ -6,6 +7,9 @@ export default function DashboardLayout({
     children: React.ReactNode
   }) {
   return (
-    <div>{children}</div>
+    <div>
+      <Navbar />
+      {children}
+    </div>
   )
 }
