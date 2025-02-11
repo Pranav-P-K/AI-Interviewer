@@ -63,7 +63,7 @@ export default function Page() {
               </a>
 
               <h1 className="mt-2 text-2xl font-bold text-gray-900 sm:text-3xl md:text-4xl dark:text-white">
-                Welcome to AI Interviewer
+                Welcome to AI Interviewer 🦑
               </h1>
 
               <p className="mt-4 leading-relaxed text-gray-500 dark:text-gray-400">
