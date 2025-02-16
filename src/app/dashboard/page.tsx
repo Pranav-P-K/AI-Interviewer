@@ -1,5 +1,5 @@
 import React from 'react'
-import AddNewInterview from './_components/AddNewInterview'
+import AddNewInterview from '@/components/AddNewInterview'
 
 const Dashboard = () => {
   return (

@@ -8,6 +8,7 @@ import Webcam from "react-webcam";
 import { useParams } from 'next/navigation';
 import { Lightbulb, WebcamIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 interface InterviewData {
   jsonPos: string,
@@ -29,7 +30,6 @@ const InterviewPage: React.FC = () => {
         .select()
         .from(Interview)
         .where(eq(Interview.mockId, interviewId));
-      console.log(result[0])
       setInterviewData(result[0] as InterviewData || null);
     } catch (error) {
       console.error("Error fetching interview details:", error);
@@ -59,21 +59,28 @@ const InterviewPage: React.FC = () => {
           </div>
         </div>
         <div className='flex flex-col justify-center'>
-          {webcamEnable ? ( 
-            <Webcam 
+          {webcamEnable ? (
+            <Webcam
               onUserMedia={() => setWebcamEnable(true)}
               onUserMediaError={() => setWebcamEnable(false)}
               mirrored={true}
-              style={{height:300, width:300}}
-            /> 
+              style={{ height: 300, width: 300 }}
+            />
           ) : (
             <>
-              <WebcamIcon className='h-72 w-full my-7 p-20 bg-secondary rounded-lg border' /> 
-              <div className='flex justify-center flex-row gap-5'>
-                <Button onClick={() => setWebcamEnable(true)} className='w-[60%]'>Enable WebCam and Microphone</Button>
-                <Button className='w-[40%]'>Start Interview</Button>
+              <WebcamIcon className="h-72 w-full my-7 p-20 bg-secondary rounded-lg border shadow-lg" />
+
+              <div className="flex flex-col md:flex-row justify-center items-center gap-4 w-full">
+                <Button onClick={() => setWebcamEnable(true)} className="w-full md:w-[60%] px-6 py-3 text-md">
+                  Enable WebCam and Microphone
+                </Button>
+
+                <Link href={`/dashboard/interview/${interviewId}/start`} className="w-full md:w-[40%]">
+                  <Button className="w-full px-6 py-3 text-md">Start Interview</Button>
+                </Link>
               </div>
             </>
+
           )}
         </div>
       </div>
