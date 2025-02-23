@@ -10,3 +10,14 @@ export const Interview = pgTable('interview', {
     createdBy: varchar('createdBy', { length: 255 }).notNull(),
     createdAt: varchar('createdAt', { length: 255 }).notNull(),
 });
+
+export const UserAnwer = pgTable('userAnswer', {
+    id: serial('id').primaryKey(),
+    question: varchar('question').notNull(),
+    corrctAns: text('correctAns').notNull(),
+    userAns: text('userAnswer').notNull(),
+    feedback: text('feedback').notNull(),
+    rating: varchar('rating').notNull(),
+    userEmail: varchar('userEmail').notNull(),
+    createdAt: varchar('createdAt', { length: 255 }).notNull(),
+})

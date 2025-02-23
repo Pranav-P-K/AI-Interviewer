@@ -7,18 +7,20 @@ import { eq } from 'drizzle-orm';
 import { useParams } from 'next/navigation';
 import React, { useCallback, useEffect, useState } from 'react';
 import dynamic from 'next/dynamic'
+import { Button } from '@/components/ui/button';
 
 const RecordAnswerSection = dynamic(
-  () => import('@/components/RecordAnswerSection'),
-  { ssr: false }
+    () => import('@/components/RecordAnswerSection'),
+    { ssr: false }
 )
 
 interface QuestionData {
+    answerExample: string;
     question: string;
-    answer: string;
 }
 
 interface InterviewData {
+    mockId: string;
     jsonPos: string;
     jsonDes: string;
     jsonExp: string;
@@ -29,7 +31,9 @@ const StartInterview: React.FC = () => {
     const params = useParams();
     const interviewId = params?.interviewId as string;
     const [interviewQns, setInterviewQns] = useState<string[]>([]);
-    const [activeQnIdx, setActiveQnIdx] = useState(0); 
+    const [interviewAns, setInterviewAns] = useState<string[]>([]);
+    const [interviewData, setInterviewData] = useState<InterviewData | null>(null);
+    const [activeQnIdx, setActiveQnIdx] = useState(0);
 
     const GetInterviewDetails = useCallback(async () => {
         if (!interviewId) return;
@@ -45,6 +49,7 @@ const StartInterview: React.FC = () => {
             }
 
             const interview = result[0] as InterviewData;
+            setInterviewData(interview);
 
             if (interview.jsonResp) {
                 try {
@@ -52,6 +57,7 @@ const StartInterview: React.FC = () => {
 
                     if (Array.isArray(parsedQuestions)) {
                         setInterviewQns(parsedQuestions.map(q => q.question));
+                        setInterviewAns(parsedQuestions.map(a => a.answerExample));
                     } else {
                         console.error("jsonResp is not an array of objects:", parsedQuestions);
                     }
@@ -71,8 +77,15 @@ const StartInterview: React.FC = () => {
     return (
         <div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-                <QuestionSection interviewQns={interviewQns} activeQnIdx={activeQnIdx}/>
-                <RecordAnswerSection />
+                <QuestionSection interviewQns={interviewQns} activeQnIdx={activeQnIdx} />
+                <div>
+                    <RecordAnswerSection interviewQns={interviewQns} interviewAns={interviewAns} activeQnIdx={activeQnIdx} />
+                    <div className='flex justify-end gap-6'>
+                        {activeQnIdx > 0 && <Button onClick={() => setActiveQnIdx(activeQnIdx - 1)}>Previous Question</Button>}
+                        {activeQnIdx !== interviewQns?.length - 1 && <Button onClick={() => setActiveQnIdx(activeQnIdx + 1)}>Next Question</Button>}
+                        {activeQnIdx === interviewQns?.length - 1 && <Button>End Intrview</Button>}
+                    </div>
+                </div>
             </div>
         </div>
     );

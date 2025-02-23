@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 
 interface InterviewData {
+  mockId: string;
   jsonPos: string,
   jsonDes: string,
   jsonExp: string,
