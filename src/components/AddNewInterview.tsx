@@ -18,6 +18,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { useUser } from '@clerk/nextjs';
 import moment from 'moment';
 import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 const AddNewInterview = () => {
     const [openDialog, setOpenDialog] = useState(false);
@@ -32,7 +33,6 @@ const AddNewInterview = () => {
     const onSubmit = async (e: { preventDefault: () => void; }) => {
         setLoading(true);
         e.preventDefault()
-        console.log(jobPos, jobDes, jobExp)
 
         const InputPrompt = "Job Position:" + jobPos + "; Job Description:" + jobDes + "; Job Experience:" + jobExp + ". Depending on this information give me 5 interview questions with answer in json format"
         const resp = await chatSession.sendMessage(InputPrompt)
@@ -50,14 +50,13 @@ const AddNewInterview = () => {
                 createdBy: user?.primaryEmailAddress?.emailAddress || "Unknown",
                 createdAt: moment().format('DD-MM-yyyy'),
             }).returning({ mockId: Interview.mockId });
-            console.log("Inserted ID: ", dbVal);
             
             if (dbVal) {
                 setOpenDialog(false);
                 router.push('/dashboard/interview/' + dbVal[0]?.mockId)
             }
         } else {
-            console.log('Error Inserting Data');
+            toast('Error Inserting Data');
         }
     }
 

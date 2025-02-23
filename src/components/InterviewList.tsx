@@ -8,30 +8,41 @@ import { desc, eq } from 'drizzle-orm';
 import { Button } from './ui/button';
 import { useRouter } from 'next/navigation';
 
+interface result {
+    id: number;
+    mockId: string;
+    jsonResp: string;
+    jsonPos: string;
+    jsonDes: string;
+    jsonExp: string;
+    createdBy: string;
+    createdAt: string;
+}
+
 const InterviewList = () => {
     const router = useRouter();
     const { user } = useUser();
-    const [interviewList, setInterviewList] = useState([]);
+    const [interviewList, setInterviewList] = useState<result[]>([]);
 
     useEffect(() => {
         if (user) GetInterviewList();
     }, [user]);
 
     const GetInterviewList = async () => {
+        if (!user?.primaryEmailAddress?.emailAddress) return;
         const result = await db.select()
             .from(Interview)
             .where(eq(Interview.createdBy, user?.primaryEmailAddress?.emailAddress))
             .orderBy(desc(Interview.id));
 
-        console.log(result);
         setInterviewList(result);
     };
 
-    const onStart = (interviewId: number) => {
+    const onStart = (interviewId: string) => {
         router.push(`/dashboard/interview/${interviewId}`);
     };
     
-    const onFeedback = (interviewId: number) => {
+    const onFeedback = (interviewId: string) => {
         router.push(`/dashboard/interview/${interviewId}/feedback`);
     };
 

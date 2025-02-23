@@ -84,14 +84,12 @@ const RecordAnswerSection = ({ interviewQns, interviewAns, activeQnIdx, intervie
   };
 
   const UpdateUserAns = async () => {
-    console.log(userAns);
     setLoading(true);
 
     const feedbackPrompt = `Question: ${interviewQns[activeQnIdx]}, User Answer: ${userAns}, Depends on question and answer for given interview question, please give us rating for answer and feedback as area of improvement if any in just 3 to 5 lines in JSON format with rating field and feedback field`;
 
     const result = await chatSession.sendMessage(feedbackPrompt);
     const mockJsonResp = (result.response.text()).replace('```json', '').replace('```', '');
-    console.log(mockJsonResp);
     const JsonFeedbackResp = JSON.parse(mockJsonResp);
 
     const userEmail = user?.primaryEmailAddress?.emailAddress ?? '';

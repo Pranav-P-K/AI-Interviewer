@@ -13,10 +13,22 @@ import { ChevronDown } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 
+interface result {
+    id: number;
+    mockIdRef: string;
+    question: string;
+    correctAns: string;
+    userAns: string;
+    feedback: string;
+    rating: string;
+    userEmail: string;
+    createdAt: string;
+}
+
 const Feedback: React.FC = () => {
     const params = useParams();
     const interviewId = params?.interviewId as string;
-    const [feedbackList, setFeedbackList] = useState([]);
+    const [feedbackList, setFeedbackList] = useState<result[]>([]);
 
     useEffect(() => {
         GetFeedback();
@@ -27,7 +39,6 @@ const Feedback: React.FC = () => {
             .from(UserAnswer)
             .where(eq(UserAnswer.mockIdRef, interviewId))
             .orderBy(UserAnswer.id);
-        console.log(result);
         setFeedbackList(result);
     }
 
