@@ -9,11 +9,11 @@ import { Mic, StopCircle } from 'lucide-react'
 import { toast } from 'sonner'
 import { chatSession } from '@/utils/GeminiAIModal'
 import { db } from '@/utils/db'
-import { UserAnwer } from '@/utils/schema'
+import { UserAnswer } from '@/utils/schema'
 import { useUser } from '@clerk/nextjs'
 import moment from 'moment'
 
-const RecordAnswerSection = ({ interviewQns, interviewAns, activeQnIdx }: { interviewQns: string[], interviewAns: string[], activeQnIdx: number }) => {
+const RecordAnswerSection = ({ interviewQns, interviewAns, activeQnIdx, interviewId }: { interviewQns: string[], interviewAns: string[], activeQnIdx: number, interviewId: string }) => {
   const [isBrowserSupported, setIsBrowserSupported] = useState(false)
   const [isClient, setIsClient] = useState(false)
   const [userAns, setUserAns] = useState('');
@@ -24,6 +24,7 @@ const RecordAnswerSection = ({ interviewQns, interviewAns, activeQnIdx }: { inte
     isRecording,
     startSpeechToText,
     stopSpeechToText,
+    setResults
   } = useSpeechToText({
     continuous: true,
     useLegacyResults: false,
@@ -98,9 +99,10 @@ const RecordAnswerSection = ({ interviewQns, interviewAns, activeQnIdx }: { inte
       return;
     }
 
-    const resp = await db.insert(UserAnwer).values({
+    const resp = await db.insert(UserAnswer).values({
+      mockIdRef: interviewId,
       question: interviewQns[activeQnIdx],
-      corrctAns: interviewAns[activeQnIdx],
+      correctAns: interviewAns[activeQnIdx],
       userAns: userAns,
       feedback: JsonFeedbackResp?.feedback,
       rating: JsonFeedbackResp?.rating,
@@ -110,8 +112,10 @@ const RecordAnswerSection = ({ interviewQns, interviewAns, activeQnIdx }: { inte
 
     if (resp) {
       toast('User Answer Recorded Successfully');
+      setUserAns('');
+      setResults([]);
     }
-    setUserAns('');
+    setResults([]);
     setLoading(false);
   }
 

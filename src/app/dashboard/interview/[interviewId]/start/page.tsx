@@ -8,6 +8,7 @@ import { useParams } from 'next/navigation';
 import React, { useCallback, useEffect, useState } from 'react';
 import dynamic from 'next/dynamic'
 import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 const RecordAnswerSection = dynamic(
     () => import('@/components/RecordAnswerSection'),
@@ -79,11 +80,13 @@ const StartInterview: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                 <QuestionSection interviewQns={interviewQns} activeQnIdx={activeQnIdx} />
                 <div>
-                    <RecordAnswerSection interviewQns={interviewQns} interviewAns={interviewAns} activeQnIdx={activeQnIdx} />
+                    <RecordAnswerSection interviewQns={interviewQns} interviewAns={interviewAns} activeQnIdx={activeQnIdx} interviewId={interviewId}/>
                     <div className='flex justify-end gap-6'>
                         {activeQnIdx > 0 && <Button onClick={() => setActiveQnIdx(activeQnIdx - 1)}>Previous Question</Button>}
                         {activeQnIdx !== interviewQns?.length - 1 && <Button onClick={() => setActiveQnIdx(activeQnIdx + 1)}>Next Question</Button>}
-                        {activeQnIdx === interviewQns?.length - 1 && <Button>End Intrview</Button>}
+                        <Link href={`/dashboard/interview/${interviewId}/feedback`}>
+                            {activeQnIdx === interviewQns?.length - 1 && <Button>End Intrview</Button>}
+                        </Link>
                     </div>
                 </div>
             </div>
