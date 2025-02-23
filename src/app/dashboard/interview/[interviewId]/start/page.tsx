@@ -33,7 +33,6 @@ const StartInterview: React.FC = () => {
     const interviewId = params?.interviewId as string;
     const [interviewQns, setInterviewQns] = useState<string[]>([]);
     const [interviewAns, setInterviewAns] = useState<string[]>([]);
-    const [interviewData, setInterviewData] = useState<InterviewData | null>(null);
     const [activeQnIdx, setActiveQnIdx] = useState(0);
 
     const GetInterviewDetails = useCallback(async () => {
@@ -50,7 +49,6 @@ const StartInterview: React.FC = () => {
             }
 
             const interview = result[0] as InterviewData;
-            setInterviewData(interview);
 
             if (interview.jsonResp) {
                 try {
